@@ -1,2 +1,3 @@
-# Wack a mole
-## My first python game and project , so excited :smile:
+# Solar system animation :sunny: :star: :earth_americas: :full_moon:
+## My first python little project , so excited :smile: :snake:
+<img src ="solar.png" />
