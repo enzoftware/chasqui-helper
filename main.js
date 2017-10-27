@@ -1,7 +1,7 @@
 
 path = [];
 var counter = 1;
-
+var icon = "icon.png";
 var map = new GMaps({
     el: '#map',
     lat: -12.124836771541993,
@@ -14,6 +14,7 @@ var map = new GMaps({
         map.addMarker({
             lat : latitude,
             lng : longitude,
+            icon :icon,
             title : 'House',
             infoWindow : {
                 content : 'Latitud ' + latitude + '\n' +
@@ -23,9 +24,7 @@ var map = new GMaps({
 
         path.push([latitude,longitude]);
 
-
-
-        if(path.length >= 2 ){
+        if(path.length >= 1 ){
             map.drawRoute({
                 origin : path[counter-1] ,
                 destination : path[counter],
@@ -34,8 +33,16 @@ var map = new GMaps({
                 strokeWeight: 6
             });
 
-        }
+            map.drawPolygon({
+                paths: path, // pre-defined polygon shape
+                strokeColor: '#BBD8E9',
+                strokeOpacity: 1,
+                strokeWeight: 3,
+                fillColor: '#BBD8E9',
+                fillOpacity: 0.6
+            });
 
+        }
         counter = counter + 1;
 
     }
