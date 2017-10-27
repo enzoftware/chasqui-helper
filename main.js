@@ -33,14 +33,16 @@ var map = new GMaps({
                 strokeWeight: 6
             });
 
-            map.drawPolygon({
+            /*map.drawPolygon({
                 paths: path, // pre-defined polygon shape
                 strokeColor: '#BBD8E9',
                 strokeOpacity: 1,
                 strokeWeight: 3,
                 fillColor: '#BBD8E9',
                 fillOpacity: 0.6
-            });
+            });*/
+
+            distance()
 
         }
         counter = counter + 1;
@@ -48,7 +50,14 @@ var map = new GMaps({
     }
 });
 
+function distance() {
+    var srcLocation = new google.maps.LatLng(path[0][0] , path[0][1]);
+    var dstLocation = new google.maps.LatLng(path[1][0], path[1][1]);
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(srcLocation, dstLocation);
+    console.log('distance = ' + distance/1000); // Distance in Kms.
+}
 
+//
 
 
 // -12.124836771541993 -77.00487971305847 , my house directions
