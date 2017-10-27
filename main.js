@@ -1,10 +1,6 @@
 
-function Place(lat , lng) {
-    this.latitude = lat;
-    this.longitude = lng;
-}
-
-var listPlaces =  [];
+path = [];
+var counter = 1;
 
 var map = new GMaps({
     el: '#map',
@@ -25,22 +21,23 @@ var map = new GMaps({
             }
         });
 
-        listPlaces.push(new Place(latitude,longitude));
+        path.push([latitude,longitude]);
 
-        for (var i = 0 ; i < listPlaces.length ; i++){
-            console.log(listPlaces[i]);
-        }
 
-        if(listPlaces.length >= 2 ){
+
+        if(path.length >= 2 ){
             map.drawRoute({
-                origin: [listPlaces[0].latitude, listPlaces[0].longitude],
-                destination: [listPlaces[1].latitude, listPlaces[1].longitude],
-                travelMode: 'driving',
+                origin : path[counter-1] ,
+                destination : path[counter],
                 strokeColor: '#131540',
                 strokeOpacity: 0.6,
                 strokeWeight: 6
             });
+
         }
+
+        counter = counter + 1;
+
     }
 });
 
