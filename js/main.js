@@ -1,60 +1,285 @@
 
-path = [];
-var counter = 1;
-var icon;
-var iconGirl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACcUExURch3XfhEUXhUR3hUSP+3TPCrS3pVRuCETv+3TP+5TPpMUfcbVPGtS4heSPcoU/pPUXhUR/YFVopgSHhURvg0U/QAVP+3TP+3TP+3TKh2SP+3THdTRv+3TP+3TJZpSJJmSPlJUr+JSfUAVotiR3hURsWPSPlGUv+3S/YBVnhUSP+nJtudSv2DT/tRS/+vTP+kTvccVfthUvtmUPk9UhJIbJ4AAAAndFJOUwEYXvDvK4oOaVt04Ugi61mn8PrU0yzHjIKWp0bc4uvzivWE5bdknTasaEIAAAGqSURBVEgNxZVpY4MgDIbxbqu2Vnvf11Zw2vP//7cFW2eoFti+jA8KSR7eBBQI+b82XcXxavoLfWfNirZ2dKEwfhCMrT0txoz2JcHYPjKVUJgwa/v107YWS0I5FFqMTY+ouYxZciaCnD4QcQzAEMlkPAiwHIx4IMtkizAHf0IWFTMiCZjmEhkT/AfSqpCAHMAkW7W567rgn5XMmBATTDKVMoGJzSG7VY513kZ7PGnLqq5PYvQ2m55Rt7+1dLq0aN3O2xDRYfgPgD8HWskZT4kH19VhBpVGoSOm0DTqiASlvaYowSakpSVjvIpQKszYMKjlpc7ss66i2hz+FV8q7ALDdkMy2ATIqSIoPWkhGUYyLeSKkZsWcsfIXQtB1VMK9avLP2MRXr8aEaqnNFMizjIXVa4L5fHvoR+Mw77GD9MXVXy80c39oUhQqj40hi8q/WHz1Nhq7BDk7zRKATo4Z7c8z6+37KxcradYcVukKT9j9TSA48EFYuOMpf1liYykYdg5KpEZtkr7/H4pEhtLw7BzUiL6Fww/MwqVAE8k7Qe2bacpPHS3RTrbH53fSM1hHgMz9wwAAAAASUVORK5CYII=";
-var iconBoy = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABpUExURUdwTG+xTmibQX+XaDqOO+W3T/+3TP+4TP+3TP+3S/+3S0JStoZ1lZOkXf+3TP+3TP+3TFhgp/+3Sz5QtUyvUP+nJi58MtW1TkJqm456jLKdZkemSyIsi7ulYP+nKDREpyw4mZNuXk6tTIElt48AAAASdFJOUwDvnif+EpJa2CjvPTqH9bd2sYsLAqYAAAE/SURBVEgN7ZXbkoIwDIYj0AM4HKyIu57l/R/SJlhbvElwd2Zv9r8oDNOvfxIyDcAfyrTWtmZBAMo6klVSKBDOiRk9eeCqhTZVRCoZUkbCuVLE/BQR1uxZYozPiuICMDEZ8d98VVlaYx9L16BR0wnDom3KaG2EqT/PzTOvfIFJXQykohZC+arvj4XXse9XIickokTMjPA+fGx1dJje+HzeTAQ2ahznNuPI/Z5sGIqU8eXOmGw+QHwX71OXvXNcN/8jH1Ts/JXozBe5tO6wTXRwlr0wlZ4jmmsxbKc6MdnyrY/ImpDrlR5r/MJqQm63xcjptADJN99e9zuuG9ENA6Dwdt3tcJWUizLFG5mQhk08bMABQ4h0vAC0AWnDIewT5wu5yOdLF5COPT1swMlHLtxNEQCAsqqqy8UvbBNH5rffHiuyK+sCUnW7AAAAAElFTkSuQmCC";
+$(document).ready(function(){
+    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+    $('#modalPresent').modal();
+});
+
+
+$('.modal').modal({
+        dismissible: true, // Modal can be dismissed by clicking outside of the modal
+        opacity: .5, // Opacity of modal background
+        inDuration: 300, // Transition in duration
+        outDuration: 200, // Transition out duration
+        startingTop: '4%', // Starting top style attribute
+        endingTop: '10%', // Ending top style attribute
+        ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+            console.log(modal, trigger , "open");
+        },
+        complete: function() { console.log("close") } // Callback for Modal close
+    }
+);
+
+/*================== LOGIC OF THE PROGRAM ==========================*/
+
+var PlacesArray = [];
+var icon = "icon.png";
+var LatLngArray = [];
+var ArrayofArrays = [];
+var nElements;
+var DistancesMatrix;
+var service = new google.maps.DistanceMatrixService();
+/*var btnStep = document.getElementById('btnStep');
+var btnDistance = document.getElementById('btnDistances');
+var btnOpt = document.getElementById('btnOptimize');
+btnStep.disabled = true;
+btnOpt.disabled = true;*/
+
+function Place(latitude, longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+}
+
+function BuildArrayofArrays() {
+
+    ArrayofArrays = [];
+
+    nElements = PlacesArray.length/10;
+    var nEntero = parseInt(nElements.toFixed());
+    //console.log(nEntero);
+
+    if (nElements - nEntero > 0){
+        nElements = nEntero+1;
+    }
+    else{
+        nElements = nEntero;
+    }
+
+    //console.log('cant='+ nElements);
+
+    var n = PlacesArray.length;
+    var limit = 0;
+
+    for(var i = 0; i < nElements; ++i){
+
+        if(n-10 > 0){
+            limit = 10;
+            n-=10;
+        }
+        else{
+            limit = n;
+        }
+        //console.log('lim='+limite);
+        for(var j = 0; j < limit; ++j){
+            LatLngArray.push(new google.maps.LatLng(PlacesArray[j+(10*i)].latitude,PlacesArray[j+(10*i)].longitude));
+        }
+        ArrayofArrays.push(LatLngArray);
+        LatLngArray = [];
+    }
+    //console.log(ArrayofArrays);
+}
 
 var map = new GMaps({
     el: '#map',
-    lat: -12.124836771541993,
-    lng: -77.00487971305847,
-    click: function (e) {
-        var position = e.latLng;
-        var latitude = position.lat();
-        var longitude = position.lng();
+    lat: -12.043333,
+    lng: -77.028333,
+    zoom: 12,
 
-
-        if(counter % 2 === 0){
-            icon = iconGirl;
-        }else {
-            icon = iconBoy;
-        }
-
-        console.log(latitude,longitude);
+    click: function(e) {
+        var latitude = e.latLng.lat();
+        var longitude = e.latLng.lng();
         map.addMarker({
-            lat : latitude,
-            lng : longitude,
-            icon :icon,
-            title : 'Student',
-            infoWindow : {
-                content : 'Latitude ' + latitude + '\n' +
-                'Longitude '+longitude
+            lat: latitude,
+            lng: longitude,
+            title: 'Spot ' + PlacesArray.length,
+            icon: icon,
+            infoWindow: {
+                content: 'Point '+ PlacesArray.length
             }
         });
+        PlacesArray.push(new Place(latitude,longitude));
+        var pos = PlacesArray.length - 2;
 
-        path.push([latitude,longitude]);
-
-        if(path.length >= 1 ){
+        if (PlacesArray.length >= 2) {
             map.drawRoute({
-                origin : path[counter-1] ,
-                destination : path[counter],
+                origin: [PlacesArray[pos].latitude, PlacesArray[pos].longitude],
+                destination: [PlacesArray[pos + 1].latitude, PlacesArray[pos + 1].longitude],
+                travelMode: 'driving',
                 strokeColor: '#131540',
                 strokeOpacity: 0.6,
                 strokeWeight: 6
             });
-
-            distance()
-
         }
 
-        counter = counter + 1;
+        var TextRoute = document.getElementById('OriginalRoute');
+        if(TextRoute.innerHTML !== "Route: "){
+            TextRoute.innerHTML += " - ";
+        }
+        TextRoute.innerHTML += PlacesArray.length-1;
     }
 });
 
-function distance() {
-    var srcLocation = new google.maps.LatLng(path[0][0] , path[0][1]);
-    var dstLocation = new google.maps.LatLng(path[1][0], path[1][1]);
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(srcLocation, dstLocation);
-    console.log('distance = ' + distance/1000);
+/**function Distance() {  //Calculates the shortest distance
+    if (PlacesArray.length >= 2) {
+
+        var DistanceMatrix = new Array(PlacesArray.length);
+
+        for(var i = 0; i<PlacesArray.length; ++i){
+
+            DistanceMatrix[i] = new Array(PlacesArray.length)
+        }
+
+       for(i = 0; i<PlacesArray.length; ++i){
+            for(var j = 0; j<PlacesArray.length; ++j){
+
+                Origin = new google.maps.LatLng(PlacesArray[i].latitude, PlacesArray[i].longitude);
+                Destination = new google.maps.LatLng(PlacesArray[j].latitude, PlacesArray[j].longitude);
+                var DistanceCal = google.maps.geometry.spherical.computeDistanceBetween(Origin, Destination);
+
+                DistanceMatrix[i][j] = DistanceCal/1000;
+            }
+        }
+        console.log(DistanceMatrix);
+    }
+}**/
+
+function Distance() {
+
+    if (PlacesArray.length >= 2) {
+
+        DistancesMatrix = new Array(PlacesArray.length);
+        for(var i = 0; i<PlacesArray.length; ++i){
+            DistancesMatrix[i] = new Array(PlacesArray.length);
+        }
+        Materialize.toast('Matrix generated', 3000);
+        BuildArrayofArrays();
+        $("#button-matrix").addClass("disabled");
+        $("#button-distance").removeClass("disabled")
+        //btnDistance.disabled = true;
+        //btnStep.disabled = false;
+    }
+    //console.log(DistancesMatrix);
+}
+
+var w=0;
+var r=0;
+
+function Step(){
+
+    console.log(w+'  '+r);
+    CalDistances(w,r);
+
+    if(r === nElements-1) {
+        if (w !== nElements-1) {
+            w++;
+            r = 0;
+        }
+        else{
+            $("#button-distance").addClass("disabled");
+            $("#button-optimize").removeClass("disabled");
+            Materialize.toast('Distances Calculated!', 4000)
+            //console.log("distance calculkadas");
+            //btnStep.disabled =true;
+            //btnStep.innerHTML = "Distances calculated!";
+            //btnOpt.disabled = false;
+            console.log(DistancesMatrix);
+            return;
+        }
+    }
+    else{r++;}
+
+    //console.log("Calculating...");
+    Materialize.toast('Calculating ... ', 4000);
+    //btnStep.disabled =true;
+    $("#button-distance").addClass("disabled");
+    setTimeout(function(){
+        $("#button-distance").removeClass("disabled");
+        //btnStep.disabled = false;
+        console.log("Calculate distances");
+        },4000);
+}
+
+function CalDistances(k,l){
+
+    service.getDistanceMatrix(
+        {
+            origins: ArrayofArrays[k],
+            destinations: ArrayofArrays[l],
+            travelMode: 'DRIVING'
+        }, function callback(response, status) {
+            if (status === 'OK') {
+                var origins = response.originAddresses;
+
+                for (var i = 0; i < origins.length; i++) {
+
+                    var results = response.rows[i].elements;
+
+                    for (var j = 0; j < results.length; j++) {
+
+                        var element = results[j];
+                        var dist = element.distance.value;
+                       DistancesMatrix[i+(10*k)][j+(10*l)]=dist;
+                        //console.log((i+(10*k)) + '_' +(j+(10*l)));
+                    }
+                }
+            }
+        });
+}
+
+function GetMayor(array){
+
+    var num =0;
+
+    for (var i = 0; i < array.length; ++i){
+        if(array[i] > num){
+            num = array[i];
+        }
+    }
+
+    return num;
+}
+
+function OptimizeRoute(){
+
+    var pos = 0;
+    var aux = 0;
+    var Route = new Array();
+    Route.push(0);
+    var minnum;
+    var NewRoute = document.getElementById('NewRoute');
+    NewRoute.innerHTML += 0;
+
+    map.cleanRoute();
+
+    for(var i = 0; i<PlacesArray.length-1; i++){
+
+        minnum = GetMayor(DistancesMatrix[pos]) + 10;
+
+        for (var j = 0; j < PlacesArray.length; ++j) {
+            if (DistancesMatrix[pos][j] < minnum && DistancesMatrix[pos][j] != 0 && Route.indexOf(j) === -1) {
+                minnum = DistancesMatrix[pos][j];
+                aux = j;
+                console.log(Route.indexOf(j));
+            }
+
+        }
+        console.log(Route.length);
+        pos = aux;
+        Route.push(aux);
+
+        map.drawRoute({
+            origin: [PlacesArray[Route[Route.length - 2]].latitude, PlacesArray[Route[Route.length - 2]].longitude],
+            destination: [PlacesArray[Route[Route.length - 1]].latitude, PlacesArray[Route[Route.length - 1]].longitude],
+            travelMode: 'driving',
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.6,
+            strokeWeight: 6
+        });
+
+        if (NewRoute.innerHTML !== "New route: ") {
+            NewRoute.innerHTML += " - ";
+        }
+        NewRoute.innerHTML += aux;
+
+    }
+    Materialize.toast('Routes optimized!!', 4000);
 }
