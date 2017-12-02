@@ -118,29 +118,6 @@ var map = new GMaps({
     }
 });
 
-/**function Distance() {  //Calculates the shortest distance
-    if (PlacesArray.length >= 2) {
-
-        var DistanceMatrix = new Array(PlacesArray.length);
-
-        for(var i = 0; i<PlacesArray.length; ++i){
-
-            DistanceMatrix[i] = new Array(PlacesArray.length)
-        }
-
-       for(i = 0; i<PlacesArray.length; ++i){
-            for(var j = 0; j<PlacesArray.length; ++j){
-
-                Origin = new google.maps.LatLng(PlacesArray[i].latitude, PlacesArray[i].longitude);
-                Destination = new google.maps.LatLng(PlacesArray[j].latitude, PlacesArray[j].longitude);
-                var DistanceCal = google.maps.geometry.spherical.computeDistanceBetween(Origin, Destination);
-
-                DistanceMatrix[i][j] = DistanceCal/1000;
-            }
-        }
-        console.log(DistanceMatrix);
-    }
-}**/
 
 function Distance() {
 
